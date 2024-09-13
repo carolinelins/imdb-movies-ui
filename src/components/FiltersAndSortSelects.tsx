@@ -1,5 +1,5 @@
 import { FloatingLabel, Form, Button, ButtonGroup, OverlayTrigger, Tooltip, Badge, Row, Col } from 'react-bootstrap'
-import { MovieFiltersInterface } from '../interfaces/MovieFilters'
+import { MovieFiltersInterface } from '../interfaces/Movie'
 import { useMemo } from 'react'
 import { toHoursAndMinutes } from '../utils/humanizeMinutes'
 
@@ -9,6 +9,7 @@ interface FiltersAndSortSelectsProps {
   handleButtonSortOrderOnClick: Function
   handleSelectSortClassificationOnClick: Function
   filters: MovieFiltersInterface
+  isLoading: boolean
 }
 
 function FiltersAndSortSelects(props: FiltersAndSortSelectsProps) {
@@ -51,7 +52,7 @@ function FiltersAndSortSelects(props: FiltersAndSortSelectsProps) {
 
   }
 
-  return <Row className='mt-2 me-1 d-flex justify-content-between align-items-center'>
+  return <Row className='mt-2 d-flex justify-content-between align-items-center'>
     <Col className='d-flex gap-2 ms-2'>
 
       {Object.entries(filters).map(([key, value]) => ((typeof value === 'string' && value) || (typeof value === 'object' && Object.values(value).some(val => val)))
@@ -62,7 +63,7 @@ function FiltersAndSortSelects(props: FiltersAndSortSelectsProps) {
         </h4>)}
 
     </Col>
-    <Col md='auto' className='d-flex'>
+    <Col md='auto' className={`d-flex me-1${props.isLoading ? ' invisible' : ''}`}>
       <ButtonGroup className='w-auto me-1 my-2'>
         <OverlayTrigger overlay={<Tooltip>Ascending</Tooltip>}>
           <Button

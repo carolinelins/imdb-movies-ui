@@ -25,3 +25,7 @@ a.page-link {
   border: 1px solid #343a40 !important;
   background-color: transparent !important;
 }
+
+.border-left-transparent {
+  border-left-color: transparent !important;
+}

@@ -1,4 +1,4 @@
-import { Button, Card, Container, ListGroup } from 'react-bootstrap'
+import { Button, Card, Container, ListGroup, Spinner } from 'react-bootstrap'
 import { toHoursAndMinutes } from '../utils/humanizeMinutes'
 
 interface MovieCardProps {
@@ -9,6 +9,7 @@ interface MovieCardProps {
   rating: number | null
   runtime: number | null
   poster: string | null
+  isLoading: boolean
 }
 
 function MovieCard(props: MovieCardProps) {
@@ -24,8 +25,16 @@ function MovieCard(props: MovieCardProps) {
           backgroundColor: '#f0f0f0'
         }}
       >
-        <i className="bi bi-image-alt" style={{ fontSize: '50px' }}></i>
-        <p>No poster available</p>
+
+        {props.isLoading ?
+          <>
+            <Spinner animation='grow' />
+            <p>Loading poster...</p>
+          </>
+          : <><i className="bi bi-image-alt" style={{ fontSize: '50px' }} />
+            <p>No poster available</p></>
+        }
+
       </Container>}
 
     <Card.Body>
@@ -36,7 +45,6 @@ function MovieCard(props: MovieCardProps) {
         <ListGroup.Item> <i className='bi bi-clock' /> {props.runtime ? toHoursAndMinutes(props.runtime) : 'Empty runtime'}</ListGroup.Item>
         <ListGroup.Item> <i className='bi bi-star-half' /> {props.rating || 'Empty rating'}</ListGroup.Item>
       </ListGroup>
-
     </Card.Body>
     <Card.Footer color='#F5C518' className='p-0'>
       <a className='w-100' href={`https://imdb.com/title/${props.tconst}`} target='_blank' rel="noreferrer">
