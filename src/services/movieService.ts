@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { MovieInterface } from '../interfaces/Movie'
 
 const API_BASE_URL = 'http://localhost:8000/api'
 
@@ -38,8 +39,25 @@ async function getPosters(tconsts: string[]) {
   }
 }
 
+async function getRecommendedMovies(clickedMovies: MovieInterface[]): Promise<MovieInterface[]> {
+  if (!clickedMovies.length) return []
+
+  try {
+    const response = await axios.get(`${API_BASE_URL}/recommendations`, {
+      params: {
+        clicked: JSON.stringify(clickedMovies)
+      }
+    })
+    return response.data
+  } catch (error: any) {
+    console.error('Error fetching recommended movies:', error)
+    throw error
+  }
+}
+
 export {
   getMovies,
   getGenres,
-  getPosters
+  getPosters,
+  getRecommendedMovies
 }

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Col, Container, Pagination, Row, Spinner } from 'react-bootstrap'
 import MovieCard from '../components/MovieCard'
-import { NavBar } from '../components/NavBar'
 import { FiltersAndSortSelects } from '../components/FiltersAndSortSelects'
 import { MovieFiltersInterface, MovieInterface, MoviePosterInterface } from '../interfaces/Movie'
 import { getMovies, getPosters } from '../services/movieService'
@@ -98,14 +97,31 @@ function MoviePage() {
     }
   }
 
+  function handleMovieClick(movie: MovieInterface) {
+    try {
+      const existing = JSON.parse(localStorage.getItem('clickedMovies') || '[]')
+
+      const minimalMovie = {
+        tconst: movie.tconst,
+        title: movie.title,
+        genres: movie.genres,
+        runtime: movie.runtime,
+        rating: movie.rating,
+        releaseYear: movie.releaseYear,
+        poster: movie.poster
+      }
+
+      const alreadyClicked = existing.some((m: any) => m.tconst === minimalMovie.tconst)
+      if (!alreadyClicked) {
+        const updated = [...existing, minimalMovie].slice(-20)
+        localStorage.setItem('clickedMovies', JSON.stringify(updated))
+      }
+    } catch (err) {
+      console.error('Error saving movie click', err)
+    }
+  }
+
   return <>
-    <Container fluid className='p-0 m-0'>
-      <Row className='m-0'>
-        <Col className='p-0'>
-          <NavBar />
-        </Col>
-      </Row>
-    </Container>
     <FiltersAndSortSelects
       sortOrder={sortOrder}
       sortClassification={sortClassification}
@@ -134,6 +150,7 @@ function MoviePage() {
                 runtime={el.runtime}
                 poster={el.poster}
                 isLoading={isLoadingPosters}
+                onClickMovie={() => handleMovieClick(el)}
               />
             </Col>)
               : <Col className='d-flex flex-column align-items-center'>
